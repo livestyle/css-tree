@@ -1,0 +1,18 @@
+{
+  "name": "css-tree",
+  "version": "0.0.0",
+  "description": "Converts CSS to editable tree",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "css",
+    "tree",
+    "ast"
+  ],
+  "author": "Sergey Chikuyonok",
+  "license": "MIT",
+  "dependencies": {
+  }
+}
