@@ -15,5 +15,8 @@
   "license": "MIT",
   "dependencies": {
     "string-stream": "git+https://github.com/emmetio/string-stream.git#v1.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^1.20.1"
   }
 }
