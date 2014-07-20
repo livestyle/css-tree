@@ -57,12 +57,46 @@ describe('CSS Tree', function() {
 
 		section.property('b', 'ddd');
 		section.property('foo', 'bar');
+		section.property('bam', 'baz', 0);
 
-		assert.equal(section.children.length, 2);
+		assert.equal(section.children.length, 3);
 
 		assert.equal(section.property('b'), 'ddd');
 		assert.equal(section.property('foo'), 'bar');
+		assert.equal(section.property('bam'), 'baz');
 
-		assert.equal(tree.valueOf(), 'a {b:ddd;foo:bar;} d{}');
+		assert.equal(tree.valueOf(), 'a {bam:baz;b:ddd;foo:bar;} d{}');
+	});
+
+	it('remove property', function() {
+		var tree = build('a {b:c;d:e;f:g} h{}');
+		var section = tree.get('a');
+
+		section.get('d').remove();
+		assert.equal(tree.valueOf(), 'a {b:c;f:g} h{}');
+	});
+
+	it('add & remove property', function() {
+		var tree = build('a {b:c;} h{}');
+		var section = tree.get('a');
+
+		section.property('foo', 'bar');
+		section.get('b').remove();
+
+		assert.equal(section.property('foo'), 'bar');
+		assert.equal(tree.valueOf(), 'a {foo:bar;} h{}');
+	});
+
+	it('ensure terminating semicolon', function() {
+		var tree = build('a {b:c}');
+		var section = tree.get('a');
+
+
+		section.property('foo', 'bar');
+
+
+		assert.equal(section.property('b'), 'c');
+		assert.equal(section.property('foo'), 'bar');
+		assert.equal(tree.valueOf(), 'a {b:c;foo:bar}');
 	});
 });
