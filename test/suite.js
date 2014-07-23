@@ -8,6 +8,7 @@ describe('CSS Tree', function() {
 			return node.name;
 		});
 
+
 		assert.deepEqual(names, ['@import', 'a', 'b', 'd', 'foo', 'e', 'bax']);
 		assert.equal(tree.get(0).name, '@import');
 		assert.equal(tree.get(0).value, 'test');
@@ -15,7 +16,23 @@ describe('CSS Tree', function() {
 		assert.equal(tree.get(1).name, 'a');
 		assert.equal(tree.get(1).before, '\n');
 		assert.equal(tree.get(1).between, ' {');
-		assert.equal(tree.get(1).after, '}');
+		assert.equal(tree.get(1).after, ' }');
+	});
+
+	it('parse & check ranges', function() {
+		var tree = build('a{b:c;}');
+		var rule = tree.get('a');
+		
+		assert.deepEqual(rule.range('name').toArray(), [0, 1]);
+		assert.deepEqual(rule.range('value').toArray(), [2, 6]);
+		
+		var property = rule.get(0);
+		assert.deepEqual(property.range('name').toArray(), [2, 3]);
+		assert.deepEqual(property.range('value').toArray(), [4, 5]);
+		
+		assert.equal(property.value, 'c');
+		assert.equal(rule.indexOf('b'), 0);
+		assert.equal(rule.name, 'a');
 	});
 
 	it('modify section', function() {
@@ -96,5 +113,24 @@ describe('CSS Tree', function() {
 		assert.equal(section.property('b'), 'c');
 		assert.equal(section.property('foo'), 'bar');
 		assert.equal(tree.valueOf(), 'a {b:c;foo:bar}');
+	});
+
+	it('preserve formatting', function() {
+		var rule;
+
+		rule = build('img {\n\tborder: 1px solid red !important; /* comment */\n\tfont: "arial", sans-serif;\n}').get(0);
+		rule.property('color', 'red');
+		assert.equal(rule.valueOf(), 'img {\n\tborder: 1px solid red !important; /* comment */\n\tfont: "arial", sans-serif;\n\tcolor: red;\n}');
+		
+		rule = build('.a {\n\tcolor: black;\n\t}').get(0);
+		rule.property('font', 'bold');
+		assert.equal(rule.valueOf(), '.a {\n\tcolor: black;\n\tfont: bold;\n\t}');
+		
+		rule = build('a {\n\tb: c;\n\t/* c */\n\td: e;\n}').get(0);
+		rule.property('f', 'g', 1);
+		assert.equal(rule.valueOf(), 'a {\n\tb: c;\n\tf: g;\n\t/* c */\n\td: e;\n}');
+		
+		rule.property('h', 'i');
+		assert.equal(rule.valueOf(), 'a {\n\tb: c;\n\tf: g;\n\t/* c */\n\td: e;\n\th: i;\n}');
 	});
 });
