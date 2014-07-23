@@ -133,4 +133,22 @@ describe('CSS Tree', function() {
 		rule.property('h', 'i');
 		assert.equal(rule.valueOf(), 'a {\n\tb: c;\n\tf: g;\n\t/* c */\n\td: e;\n\th: i;\n}');
 	});
+
+	it('incomplete rules', function() {
+		// without colon
+		var rule = build('a{b\nc:d;}').get(0);
+		assert.equal(rule.get(0).name, 'b');
+		assert.equal(rule.get(1).name, 'c');
+
+		rule.property('b', 'test');
+		assert.equal(rule.valueOf(), 'a{b:test;\nc:d;}');
+
+		// with colon
+		rule = build('a{b:\nc:d;}').get(0);
+		assert.equal(rule.get(0).name, 'b');
+		assert.equal(rule.get(1).name, 'c');
+
+		rule.property('b', 'test');
+		assert.equal(rule.valueOf(), 'a{b:test;\nc:d;}');
+	});
 });
