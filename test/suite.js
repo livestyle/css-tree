@@ -91,9 +91,7 @@ describe('CSS Tree', function() {
 		var tree = build('a {b:c}');
 		var section = tree.get('a');
 
-
 		section.property('foo', 'bar');
-
 
 		assert.equal(section.property('b'), 'c');
 		assert.equal(section.property('foo'), 'bar');
