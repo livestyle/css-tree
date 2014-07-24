@@ -151,4 +151,10 @@ describe('CSS Tree', function() {
 		rule.property('b', 'test');
 		assert.equal(rule.valueOf(), 'a{b:test;\nc:d;}');
 	});
+
+	it('section modification', function() {
+		var rule = build('a{b:c;}').section('a');
+		rule.addSection('d').property('e', 'f');
+		assert.equal(rule.valueOf(), 'a{b:c;d{e:f;}}');
+	});
 });
