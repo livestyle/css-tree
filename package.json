@@ -6,6 +6,10 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:emmetio/css-tree.git"
+  },
   "keywords": [
     "css",
     "tree",
