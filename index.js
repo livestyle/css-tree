@@ -24,12 +24,14 @@ define(function(require, exports, module) {
 	var WS_END   = 2;
 
 	function tokenize(css) {
-		var pos = 0;
-		return tokenizer.lex(css).map(function(token) {
+		var tokens = tokenizer.lex(css);
+		var pos = 0, token;
+		for (var i = 0, il = tokens.length; i < il; i++) {
+			token = tokens[i];
 			token.range = range(pos, token.value);
 			pos = token.range.end;
-			return token;
-		});
+		}
+		return tokens;
 	}
 
 	/**
@@ -220,16 +222,18 @@ define(function(require, exports, module) {
 		var src = tree._source;
 
 		// parse further
-		tree.children.forEach(function(child) {
+		var child;
+		for (var i = 0, il = tree.children.length; i < il; i++) {
+			child = tree.children[i];
 			if (!child.children.length) {
-				child.children = extractPropertiesFromRange(src, child.range('value')).map(function(p) {
-					p.parent = child;
-					return p;
-				});
+				child.children = extractPropertiesFromRange(src, child.range('value'));
+				for (var j = 0, jl = child.children.length; j < jl; j++) {
+					child.children[j].parent = child;
+				}
 			} else {
 				parseProperties(child);
 			}
-		});
+		}
 
 		// find ranges between sections to parse
 		var prev = tree.parent ? tree.range('value').start : 0;
