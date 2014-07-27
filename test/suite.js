@@ -8,7 +8,6 @@ describe('CSS Tree', function() {
 			return node.name;
 		});
 
-
 		assert.deepEqual(names, ['@import', 'a', 'b', 'd', 'foo', 'e', 'bax']);
 		assert.equal(tree.get(0).name, '@import');
 		assert.equal(tree.get(0).value, 'test');
@@ -169,5 +168,25 @@ describe('CSS Tree', function() {
 		tree.section('d').remove();
 		assert.equal(tree.children.length, 1);
 		assert.equal(tree.valueOf(), 'a {\n\tb: c;\n}\n');
+	});
+
+	it('serialization', function() {
+		var css = '@import test;\na {b:c; d {foo:bar} }\n\te {bax:baq}';
+		var tree = build(css);
+		var json = tree.toJSON();
+
+		assert.equal(json.src, css);
+		assert.equal(json.t, 'root');
+		assert.equal(json.c.length, 3);
+
+		assert.equal(json.c[0].t, 'property');
+		assert.deepEqual(json.c[0].r, {name: [0,7], between: [7,8], value: [8,12], after: [12,13]});
+
+		// restore tree from JSON
+		tree = build(json);
+		assert.equal(tree.valueOf(), css);
+		assert.equal(tree.children.length, 3);
+		assert.equal(tree.children[0].valueOf(), '@import test;');
+		assert.equal(tree.children[1].valueOf(), '\na {b:c; d {foo:bar} }');
 	});
 });
