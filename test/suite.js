@@ -165,5 +165,9 @@ describe('CSS Tree', function() {
 		tree.addSection('d').property('e', 'f');
 		assert.equal(tree.children.length, 2);
 		assert.equal(tree.valueOf(), 'a {\n\tb: c;\n}\nd {\n\te: f;\n}');
+
+		tree.section('d').remove();
+		assert.equal(tree.children.length, 1);
+		assert.equal(tree.valueOf(), 'a {\n\tb: c;\n}\n');
 	});
 });
