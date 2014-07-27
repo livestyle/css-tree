@@ -153,8 +153,17 @@ describe('CSS Tree', function() {
 	});
 
 	it('section modification', function() {
-		var rule = build('a{b:c;}').section('a');
+		var tree, rule;
+		
+		// simple cloning
+		rule = build('a{b:c;}').section('a');
 		rule.addSection('d').property('e', 'f');
 		assert.equal(rule.valueOf(), 'a{b:c;d{e:f;}}');
+
+		// preserve formatting
+		tree = build('a {\n\tb: c;\n}');
+		tree.addSection('d').property('e', 'f');
+		assert.equal(tree.children.length, 2);
+		assert.equal(tree.valueOf(), 'a {\n\tb: c;\n}\nd {\n\te: f;\n}');
 	});
 });
