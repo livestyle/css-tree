@@ -1,5 +1,5 @@
 var assert = require('assert');
-var build = require('../lib/builder').build;
+var build = require('../');
 
 describe('CSS Tree', function() {
 	it('parse', function() {

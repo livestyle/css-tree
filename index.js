@@ -8,14 +8,14 @@ if (typeof module === 'object' && typeof define !== 'function') {
 }
 
 define(function(require, exports, module) {
-	var Root = require('./root');
-	var Section = require('./section');
-	var Property = require('./property');
-	var tokenizer = require('./css-tokenizer');
-	var range = require('./range');
-	var source = require('./source');
-	var tokenIterator = require('./token-iterator');
-	var sectionParser = require('./section-parser');
+	var Root = require('./lib/root');
+	var Section = require('./lib/section');
+	var Property = require('./lib/property');
+	var tokenizer = require('./lib/css-tokenizer');
+	var range = require('./lib/range');
+	var source = require('./lib/source');
+	var tokenIterator = require('./lib/token-iterator');
+	var sectionParser = require('./lib/section-parser');
 
 	var reSpaceStart = /^\s+/;
 	var reSpaceEnd = /\s+$/;
@@ -293,37 +293,35 @@ define(function(require, exports, module) {
 		return factory(json);
 	}
 
-	return {
-		build: function(css) {
-			if (typeof css === 'object') {
-				return fromJSON(css);
-			}
+	return function(css) {
+		if (typeof css === 'object') {
+			return fromJSON(css);
+		}
 
-			var src = source(css);
-			var root = new Root(src);
+		var src = source(css);
+		var root = new Root(src);
 
-			// rules are sorted in order they appear in CSS source
-			// so we can optimize their nesting routine
-			var insert = function(range, ctx) {
-				while (ctx) {
-					if (ctx.range('self').contains(range)) {
-						return addSection(ctx, range, src);
-					}
-
-					ctx = ctx.parent;
+		// rules are sorted in order they appear in CSS source
+		// so we can optimize their nesting routine
+		var insert = function(range, ctx) {
+			while (ctx) {
+				if (ctx.range('self').contains(range)) {
+					return addSection(ctx, range, src);
 				}
 
-				// if we are here then given range is a top-level section
-				return addSection(root, range, src);
-			};
+				ctx = ctx.parent;
+			}
 
-			var sections = sectionParser.sections(css);
-			var ctx = root;
-			sections.forEach(function(r) {
-				ctx = insert(r, ctx);
-			});
+			// if we are here then given range is a top-level section
+			return addSection(root, range, src);
+		};
 
-			return parseProperties(root);
-		}
+		var sections = sectionParser.sections(css);
+		var ctx = root;
+		sections.forEach(function(r) {
+			ctx = insert(r, ctx);
+		});
+
+		return parseProperties(root);
 	};
 });

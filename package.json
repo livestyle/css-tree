@@ -1,5 +1,5 @@
 {
-  "name": "css-tree",
+  "name": "emmet-css-tree",
   "version": "0.0.0",
   "description": "Converts CSS to editable tree",
   "main": "index.js",
