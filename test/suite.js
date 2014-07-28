@@ -189,4 +189,11 @@ describe('CSS Tree', function() {
 		assert.equal(tree.children[0].valueOf(), '@import test;');
 		assert.equal(tree.children[1].valueOf(), '\na {b:c; d {foo:bar} }');
 	});
+
+	it('selector declaration', function() {
+		var rule = build('div.sample {}').sections[0];
+		assert.equal(rule.selector.valueOf(), 'div.sample');
+		rule.name = 'foo.bar';
+		assert.equal(rule.selector.valueOf(), 'foo.bar');
+	});
 });
