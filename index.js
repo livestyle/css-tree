@@ -11,6 +11,7 @@ define(function(require, exports, module) {
 	var Root = require('./lib/root');
 	var Section = require('./lib/section');
 	var Property = require('./lib/property');
+	var Node = require('./lib/node');
 	var tokenizer = require('./lib/css-tokenizer');
 	var range = require('./lib/range');
 	var source = require('./lib/source');
@@ -298,6 +299,10 @@ define(function(require, exports, module) {
 	}
 
 	return function(css) {
+		if (css instanceof Node) {
+			return css;
+		}
+		
 		if (typeof css === 'object') {
 			return fromJSON(css);
 		}
