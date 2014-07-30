@@ -237,13 +237,18 @@ define(function(require, exports, module) {
 		}
 
 		// find ranges between sections to parse
-		var prev = tree.parent ? tree.range('value').start : 0;
+		// for sections use actual `value` range since `range('value')` will
+		// return range composed of child nodes
+		var targetRange = tree.type === 'root' ? tree.range('full') : tree._ranges.value;
+		var prev = targetRange.start;
 		var ranges = tree.children.map(function(child) {
 			var fullRange = child.range('self');
 			var r = range.fromIndex(prev, fullRange.start);
 			prev = fullRange.end;
 			return r;
 		});
+
+		ranges.push(range.fromIndex(prev, targetRange.end));
 
 		// walk ranges in reverse order (to keep proper child indexes)
 		// and insert parsed properties
@@ -254,6 +259,10 @@ define(function(require, exports, module) {
 				tree.children.splice(i, 0, props[j]);
 			}
 		}
+
+		tree.children.sort(function(a, b) {
+			return a.range('full').start - b.range('full').start;
+		});
 
 		return tree;
 	}
@@ -302,7 +311,7 @@ define(function(require, exports, module) {
 		if (css instanceof Node) {
 			return css;
 		}
-		
+
 		if (typeof css === 'object') {
 			return fromJSON(css);
 		}

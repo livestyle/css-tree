@@ -3,12 +3,14 @@ var build = require('../');
 
 describe('CSS Tree', function() {
 	it('parse', function() {
-		var tree = build('@import test;\na {b:c; d {foo:bar} }\n\te {bax:baq}');
-		var names = tree.all().map(function(node) {
-			return node.name;
-		});
+		var tree = build('@import test;\na {b:c; d {foo:bar} e:f; }\n\tg {bax:baq}');
+		var names = function(node) {
+			return node.all().map(function(child) {
+				return child.name;
+			});
+		};
 
-		assert.deepEqual(names, ['@import', 'a', 'b', 'd', 'foo', 'e', 'bax']);
+		assert.deepEqual(names(tree), ['@import', 'a', 'b', 'd', 'foo', 'e', 'g', 'bax']);
 		assert.equal(tree.get(0).name, '@import');
 		assert.equal(tree.get(0).value, 'test');
 
@@ -16,6 +18,9 @@ describe('CSS Tree', function() {
 		assert.equal(tree.get(1).before, '\n');
 		assert.equal(tree.get(1).between, ' {');
 		assert.equal(tree.get(1).after, ' }');
+
+		tree = build('a {b:c;}\n@import test;');
+		assert.deepEqual(names(tree), ['a', 'b', '@import']);
 	});
 
 	it('parse & check ranges', function() {
@@ -180,7 +185,7 @@ describe('CSS Tree', function() {
 		assert.equal(json.c.length, 3);
 
 		assert.equal(json.c[0].t, 'property');
-		assert.deepEqual(json.c[0].r, {name: [0,7], between: [7,8], value: [8,12], after: [12,13]});
+		assert.deepEqual(json.c[0].r, {before: [0, 0], name: [0,7], between: [7,8], value: [8,12], after: [12,13]});
 
 		// restore tree from JSON
 		tree = build(json);
