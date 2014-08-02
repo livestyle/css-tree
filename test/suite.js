@@ -211,4 +211,10 @@ describe('CSS Tree', function() {
 		tree.addSection('d').property('e', 'f');
 		assert.equal(tree.valueOf(), '/* comment */d {\n\te: f;\n}\n');
 	});
+
+	it('insert at-properties', function() {
+		var tree = build('a{b:c}');
+		tree.addProperty('@import', 'url()', 'first');
+		assert.equal(tree.valueOf(), '\n@import url();a{b:c}');
+	});
 });
