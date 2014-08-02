@@ -316,6 +316,7 @@ define(function(require, exports, module) {
 			return fromJSON(css);
 		}
 
+		css = css || '';
 		var src = source(css);
 		var root = new Root(src);
 

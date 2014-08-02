@@ -201,4 +201,14 @@ describe('CSS Tree', function() {
 		rule.name = 'foo.bar';
 		assert.equal(rule.selector.valueOf(), 'foo.bar');
 	});
+
+	it('modify empty document', function() {
+		var tree = build();
+		tree.addSection('d').property('e', 'f');
+		assert.equal(tree.valueOf(), 'd {\n\te: f;\n}\n');
+
+		tree = build('/* comment */');
+		tree.addSection('d').property('e', 'f');
+		assert.equal(tree.valueOf(), '/* comment */d {\n\te: f;\n}\n');
+	});
 });
