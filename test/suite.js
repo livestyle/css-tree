@@ -185,7 +185,7 @@ describe('CSS Tree', function() {
 		assert.equal(json.c.length, 3);
 
 		assert.equal(json.c[0].t, 'property');
-		assert.deepEqual(json.c[0].r, {before: [0, 0], name: [0,7], between: [7,8], value: [8,12], after: [12,13]});
+		assert.deepEqual(json.c[0].r, {name: [0,7], between: [7,8], value: [8,12], after: [12,13]});
 
 		// restore tree from JSON
 		tree = build(json);

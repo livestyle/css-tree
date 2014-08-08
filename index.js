@@ -261,7 +261,7 @@ define(function(require, exports, module) {
 		}
 
 		tree.children.sort(function(a, b) {
-			return a.range('full').start - b.range('full').start;
+			return a.range('name').start - b.range('name').start;
 		});
 
 		return tree;
