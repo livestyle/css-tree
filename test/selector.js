@@ -15,7 +15,6 @@ describe('CSS selector', function() {
 	};
 
 	it('parse', function() {
-
 		var decl = selector('a, b');
 		assert.equal(decl.list.length, 2);
 		assert.deepEqual(list(decl), ['a', 'b']);
