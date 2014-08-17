@@ -115,6 +115,10 @@ define(function(require, exports, module) {
 				// user is writing a new property or abbreviation
 				name.end = token.range.start;
 				value = range(token.range.start, 0);
+				if (token.type === ';') {
+					end = range(token.range.start, token.value);
+				}
+
 				it.next();
 				break;
 			}

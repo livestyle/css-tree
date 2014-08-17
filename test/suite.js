@@ -21,6 +21,15 @@ describe('CSS Tree', function() {
 
 		tree = build('a {b:c;}\n@import test;');
 		assert.deepEqual(names(tree), ['a', 'b', '@import']);
+
+		// LESS mixin references
+		tree = build('a{.b;}');
+		assert.deepEqual(names(tree), ['a', '.b']);
+		var node = tree.get('a').get('.b');
+		assert.equal(node.name, '.b');
+		assert.equal(node.value, '');
+		assert.equal(node.between, '');
+		assert.equal(node.after, ';');
 	});
 
 	it('parse & check ranges', function() {
