@@ -125,7 +125,7 @@ describe('CSS Tree', function() {
 
 		assert.equal(section.property('b'), 'c');
 		assert.equal(section.property('foo'), 'bar');
-		assert.equal(tree.valueOf(), 'a {b:c;foo:bar}');
+		assert.equal(tree.valueOf(), 'a {b:c;foo:bar;}');
 	});
 
 	it('preserve formatting', function() {
