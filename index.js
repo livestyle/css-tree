@@ -64,12 +64,13 @@ define(function(require, exports, module) {
 	}
 
 	/**
-	 * Skips white-space tokens in given iterator
+	 * Skips some tokens that are not important for
+	 * consuming properties
 	 * @param  {TokenIterator} it
 	 */
-	function skipWs(it) {
+	function skipFormattingTokens(it) {
 		while ((token = it.current())) {
-			if (!(token.type in whitespaceTokens)) {
+			if (!(token.type in whitespaceTokens) && token.type !== ';') {
 				break;
 			}
 			it.next();
@@ -90,7 +91,7 @@ define(function(require, exports, module) {
 		var name, value, end, lastNewline;
 		var token = it.current();
 
-		if (!token || !skipWs(it).hasNext()) {
+		if (!token || !skipFormattingTokens(it).hasNext()) {
 			return null;
 		}
 

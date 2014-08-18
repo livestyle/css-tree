@@ -2,13 +2,14 @@ var assert = require('assert');
 var build = require('../');
 
 describe('CSS Tree', function() {
+	var names = function(node) {
+		return node.all().map(function(child) {
+			return child.name;
+		});
+	};
+
 	it('parse', function() {
 		var tree = build('@import test;\na {b:c; d {foo:bar} e:f; }\n\tg {bax:baq}');
-		var names = function(node) {
-			return node.all().map(function(child) {
-				return child.name;
-			});
-		};
 
 		assert.deepEqual(names(tree), ['@import', 'a', 'b', 'd', 'foo', 'e', 'g', 'bax']);
 		assert.equal(tree.get(0).name, '@import');
@@ -46,6 +47,11 @@ describe('CSS Tree', function() {
 		assert.equal(property.value, 'c');
 		assert.equal(rule.indexOf('b'), 0);
 		assert.equal(rule.name, 'a');
+	});
+
+	it('redundant semi-colons', function() {
+		var tree = build('a{b{c:e}; d:f};');
+		assert.deepEqual(names(tree), ['a', 'b', 'c', 'd']);
 	});
 
 	it('modify section', function() {
