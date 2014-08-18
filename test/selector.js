@@ -19,6 +19,10 @@ describe('CSS selector', function() {
 		assert.equal(decl.list.length, 2);
 		assert.deepEqual(list(decl), ['a', 'b']);
 
+		decl = selector('a,, , b');
+		assert.equal(decl.list.length, 2);
+		assert.deepEqual(list(decl), ['a', 'b']);
+
 		decl = selector('a,\n/* comment */ b');
 		assert.equal(decl.list.length, 2);
 		assert.deepEqual(list(decl), ['a', 'b']);
