@@ -312,7 +312,7 @@ define(function(require, exports, module) {
 		return factory(json);
 	}
 
-	return function(css) {
+	module.exports = function(css) {
 		if (css instanceof Node) {
 			return css;
 		}
@@ -348,4 +348,7 @@ define(function(require, exports, module) {
 
 		return parseProperties(root);
 	};
+
+	module.exports.Source = source;
+	return module.exports;
 });

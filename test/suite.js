@@ -232,4 +232,20 @@ describe('CSS Tree', function() {
 		tree.addProperty('@import', 'url()', 'first');
 		assert.equal(tree.valueOf(), '\n@import url();a{b:c}');
 	});
+
+	it('changeset', function() {
+		var css = 'a{b:c;d:e}';
+		var tree = build(css);
+
+		var section = tree.get('a');
+		section.property('b', 'foo');
+		section.get('d').remove();
+		section.property('bar', 'baz');
+		assert.deepEqual(tree.source.changeset, [[4, 5, 'foo'], [8, 11, ''], [8, 8, 'bar:baz;']]);
+
+		// replay changes on another source
+		var src = new build.Source(css);
+		src.applyChangeset(tree.source.changeset);
+		assert.equal(src.valueOf(),tree.source.valueOf());
+	});
 });
