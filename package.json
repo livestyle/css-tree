@@ -1,6 +1,6 @@
 {
-  "name": "emmet-css-tree",
-  "version": "0.0.0",
+  "name": "livestyle-css-tree",
+  "version": "1.0.0",
   "description": "Converts CSS to editable tree",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:emmetio/css-tree.git"
+    "url": "git@github.com:livestyle/css-tree.git"
   },
   "keywords": [
     "css",
