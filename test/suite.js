@@ -248,4 +248,12 @@ describe('CSS Tree', function() {
 		src.applyChangeset(tree.source.changeset);
 		assert.equal(src.valueOf(),tree.source.valueOf());
 	});
+
+	it('backtick expressions', function() {
+		var source = '.eval{\njs: `42`;\nmultiline: `(function(){var x = 1 + 1;\nreturn x})()`;}';
+		var tree = build(source);
+		var section = tree.get('.eval');
+		assert.equal(section.property('js'), '`42`');
+		assert.equal(section.property('multiline'), '`(function(){var x = 1 + 1;\nreturn x})()`');
+	});
 });

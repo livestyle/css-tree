@@ -183,7 +183,7 @@ define(function(require, exports, module) {
 			return [];
 		}
 
-		var it = tokenIterator(tokenize(substr));
+		var it = tokenIterator(tokenize(substr, offset));
 		var subsource = source(substr);
 		var out = [], property, node;
 
