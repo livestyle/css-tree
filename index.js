@@ -12,6 +12,7 @@ define(function(require, exports, module) {
 	var Section = require('./lib/section');
 	var Property = require('./lib/property');
 	var Node = require('./lib/node');
+	var SelectorDeclaration = require('./lib/selector');
 	var tokenizer = require('./lib/css-tokenizer');
 	var range = require('./lib/range');
 	var source = require('./lib/source');
@@ -350,5 +351,9 @@ define(function(require, exports, module) {
 	};
 
 	module.exports.Source = source;
+	module.exports.SelectorDeclaration = SelectorDeclaration;
+	module.exports.parseSelector = function(sel) {
+		return new SelectorDeclaration(sel);
+	};
 	return module.exports;
 });
