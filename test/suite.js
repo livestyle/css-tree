@@ -1,4 +1,6 @@
 var assert = require('assert');
+var fs = require('fs');
+var path = require('path');
 var build = require('../');
 
 describe('CSS Tree', function() {
@@ -255,5 +257,22 @@ describe('CSS Tree', function() {
 		var section = tree.get('.eval');
 		assert.equal(section.property('js'), '`42`');
 		assert.equal(section.property('multiline'), '`(function(){var x = 1 + 1;\nreturn x})()`');
+	});
+
+	it('comment parsing', function() {
+		var source = fs.readFileSync(path.join(__dirname, 'css/comments.css'), 'utf8');
+		var tree = build(source);
+
+		assert.equal(tree.children.length, 2);
+		assert.equal(tree.get(0).name, 'a');
+		assert.equal(tree.get(1).name, 'baz');
+
+		var baz = tree.get('baz');
+		assert.equal(baz.children.length, 2);
+		assert.equal(baz.get(0).name, 'a');
+		assert.equal(baz.get(0).value, 'b');
+
+		assert.equal(baz.get(1).name, 'j');
+		assert.equal(baz.get(1).value, 'url(//foo)');
 	});
 });
