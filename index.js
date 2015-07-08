@@ -70,6 +70,7 @@ define(function(require, exports, module) {
 	 * @param  {TokenIterator} it
 	 */
 	function skipFormattingTokens(it) {
+		var token;
 		while ((token = it.current())) {
 			if (!(token.type in whitespaceTokens) && token.type !== ';') {
 				break;
