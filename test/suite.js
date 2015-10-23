@@ -106,6 +106,17 @@ describe('CSS Tree', function() {
 		assert.equal(tree.valueOf(), 'a {bam:baz;b:ddd;foo:bar;} d{}');
 	});
 
+	it('best insertion point', function() {
+		var tree = build('a {\n\tb:c;\n\n\td {\n\t\tfoo: bar;\n\t}\n\te {}\n}');
+		var section = tree.get('a');
+		var subsection = section.get('d');
+
+		section.property('b2', 'c2');
+		subsection.property('b3', 'c3');
+
+		assert.equal(tree.valueOf(), 'a {\n\tb:c;\n\tb2:c2;\n\n\td {\n\t\tfoo: bar;\n\t\tb3: c3;\n\t}\n\te {}\n}');
+	});
+
 	it('remove property', function() {
 		var tree = build('a {b:c;d:e;f:g} h{}');
 		var section = tree.get('a');
