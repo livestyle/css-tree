@@ -1,6 +1,6 @@
 {
   "name": "livestyle-css-tree",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Converts CSS to editable tree",
   "main": "index.js",
   "scripts": {
