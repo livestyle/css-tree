@@ -36,7 +36,7 @@ function tokenize(css) {
  * and/or from the end
  * @param  {Range}  range Range to modify
  * @param  {Source} source  Source text that range belongs to
- * @param  {Number} mask  Mask indicating from which end 
+ * @param  {Number} mask  Mask indicating from which end
  * whitespace should be removed
  * @return {Range}
  */
@@ -81,7 +81,7 @@ function skipFormattingTokens(it) {
  * that can be used for next value consmption
  * @param  {TokenIterator} it
  * @param  {Source} source
- * @return {Object}    Object with `name` and `value` properties 
+ * @return {Object}    Object with `name` and `value` properties
  * as ranges. Value range can be zero-length.
  */
 function consumeSingleProperty(it, source) {
@@ -98,6 +98,13 @@ function consumeSingleProperty(it, source) {
 	var isAtProperty = token.type === '@';
 	while (token = it.next()) {
 		name.end = token.range.end;
+		if (token.type === 'white' && it.hasNext() && it.peek().type === ':') {
+			// Edge case: formatting space after variable definition
+			// @a : 1;
+			// --^
+			token = it.next();
+		}
+
 		if (token.type === ':' || token.type === 'white') {
 			name.end = token.range.start;
 			it.next();
@@ -141,7 +148,7 @@ function consumeSingleProperty(it, source) {
 				it.next();
 				break;
 			} else if (token.type == ':' && lastNewline) {
-				// A special case: 
+				// A special case:
 				// user is writing a value before existing
 				// property, but didn’t inserted closing semi-colon.
 				// In this case, limit value range to previous
@@ -165,7 +172,7 @@ function consumeSingleProperty(it, source) {
 }
 
 /**
- * Parses CSS properties from given source range and returns list 
+ * Parses CSS properties from given source range and returns list
  * of ranges of located CSS properties.
  * Normally, CSS source must contain properties only, it must be,
  * for example, a content of CSS selector or text between nested

@@ -38,14 +38,14 @@ describe('CSS Tree', function() {
 	it('parse & check ranges', function() {
 		var tree = build('a{b:c;}');
 		var rule = tree.get('a');
-		
+
 		assert.deepEqual(rule.range('name').toArray(), [0, 1]);
 		assert.deepEqual(rule.range('value').toArray(), [2, 6]);
-		
+
 		var property = rule.get(0);
 		assert.deepEqual(property.range('name').toArray(), [2, 3]);
 		assert.deepEqual(property.range('value').toArray(), [4, 5]);
-		
+
 		assert.equal(property.value, 'c');
 		assert.equal(rule.indexOf('b'), 0);
 		assert.equal(rule.name, 'a');
@@ -76,10 +76,10 @@ describe('CSS Tree', function() {
 
 		assert.equal(section.get(0).name, 'b');
 		assert.equal(section.get(0).value, 'c');
-		
+
 		section.get(0).name = 'foo';
 		section.get(0).value = 'bar';
-		
+
 		assert.equal(section.get(0).name, 'foo');
 		assert.equal(section.get(0).value, 'bar');
 
@@ -153,15 +153,15 @@ describe('CSS Tree', function() {
 		rule = build('img {\n\tborder: 1px solid red !important; /* comment */\n\tfont: "arial", sans-serif;\n}').get(0);
 		rule.property('color', 'red');
 		assert.equal(rule.valueOf(), 'img {\n\tborder: 1px solid red !important; /* comment */\n\tfont: "arial", sans-serif;\n\tcolor: red;\n}');
-		
+
 		rule = build('.a {\n\tcolor: black;\n\t}').get(0);
 		rule.property('font', 'bold');
 		assert.equal(rule.valueOf(), '.a {\n\tcolor: black;\n\tfont: bold;\n\t}');
-		
+
 		rule = build('a {\n\tb: c;\n\t/* c */\n\td: e;\n}').get(0);
 		rule.property('f', 'g', 1);
 		assert.equal(rule.valueOf(), 'a {\n\tb: c;\n\tf: g;\n\t/* c */\n\td: e;\n}');
-		
+
 		rule.property('h', 'i');
 		assert.equal(rule.valueOf(), 'a {\n\tb: c;\n\tf: g;\n\t/* c */\n\td: e;\n\th: i;\n}');
 	});
@@ -186,7 +186,7 @@ describe('CSS Tree', function() {
 
 	it('section modification', function() {
 		var tree, rule;
-		
+
 		// simple cloning
 		rule = build('a{b:c;}').section('a');
 		rule.addSection('d').property('e', 'f');
@@ -285,5 +285,17 @@ describe('CSS Tree', function() {
 
 		assert.equal(baz.get(1).name, 'j');
 		assert.equal(baz.get(1).value, 'url(//foo)');
+	});
+
+	it('LESS variables', function() {
+		var tree = build('@a: 1;@b : 2;');
+		assert.equal(tree.get('@a').value, '1');
+		assert.equal(tree.get('@b').value, '2');
+	});
+
+	it('SCSS variables', function() {
+		var tree = build('$a: 1;$b : 2;');
+		assert.equal(tree.get('$a').value, '1');
+		assert.equal(tree.get('$b').value, '2');
 	});
 });
